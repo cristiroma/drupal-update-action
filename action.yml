@@ -1,0 +1,23 @@
+name: "Update a Drupal 8+ remote instance"
+description: 'SSH to server and execute Drush update commands on the Drupal 8+ instance'
+inputs:
+  path:
+    description: 'Absolute path on the server where the instance is located'
+    required: true
+  server_name:
+    description: 'Name of the server SSH name'
+    required: true
+    default: 'server'
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Update Drupal instance"
+      shell: bash
+      run: |
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ./vendor/bin/drush state-set system.maintenance_mode TRUE'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ./vendor/bin/drush cache:rebuild'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ./vendor/bin/drush config-import -y'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ./vendor/bin/drush updatedb -y'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ./vendor/bin/drush cache:rebuild'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ./vendor/bin/drush state-set system.maintenance_mode FALSE'
