@@ -20,6 +20,7 @@ runs:
       shell: bash
       run: |
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} state-set system.maintenance_mode TRUE'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} updatedb -y'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} config-import -y'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} updatedb -y'
