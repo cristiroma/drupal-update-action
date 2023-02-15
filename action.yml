@@ -25,4 +25,6 @@ runs:
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} config-import -y'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} updatedb -y'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} deploy:hook -y'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} state-set system.maintenance_mode FALSE'
