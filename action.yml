@@ -12,6 +12,9 @@ inputs:
     description: 'Path to drush executable'
     required: false
     default: './vendor/bin/drush'
+  enable_extra_modules:
+    description: 'A list of modules to be enabled after the deployment is complete'
+    required: false
 
 runs:
   using: "composite"
@@ -26,5 +29,6 @@ runs:
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} updatedb -y'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} deploy:hook -y'
+        ssh ${{ inputs.server_name }} 'if [ "${{ inputs.enable_extra_modules }}" != "" ]; then cd ${{ inputs.path }} && ${{ inputs.drush }} pm:enable ${{ inputs.enable_extra_modules }} fi'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} state-set system.maintenance_mode FALSE'
