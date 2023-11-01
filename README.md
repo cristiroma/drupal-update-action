@@ -13,7 +13,7 @@ This GitHub action runs remote commands over SSH to update a Drupal 8+ instance.
 - `path` - (Default: `empty`) - Full absolute path on the remote server where the Drupal instance is located
 - `server_name` - (Default: `server`) - Is the name of the server given in the SSH configuration (`.ssh/config`)
 - `drush` - (Default: `./vendor/bin/drush`) - Name of Drush executable to use for deployments instead of default one from vendor
-- `enable_extra_modules` - (Default: empty) - After the deployment is done, some extra modules can be enabled (i.e. `field_ui`, `views_ui`, `devel`, `devel_generate` etc.)
+- `enable_extra_modules` - (Default: empty) - After the deployment is done, some extra modules can be enabled (i.e. `field_ui views_ui devel devel_generate` etc.)
 
 Here's an example how to configure a remote SSH server `myserver` given in the example below:
 
@@ -50,5 +50,5 @@ jobs:
         with:
           path: ${{ secrets.PROJECT_DIR }}/live
           server_name: myserver
-          enable_extra_modules: field_ui, views_ui, devel, devel_generate, views_ui, webform_ui, purge_ui, config
+          enable_extra_modules: field_ui views_ui devel devel_generate views_ui webform_ui purge_ui config
 ```
