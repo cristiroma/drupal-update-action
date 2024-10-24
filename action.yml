@@ -15,6 +15,10 @@ inputs:
   enable_extra_modules:
     description: 'A space-separated list of modules to be enabled after the deployment is complete. Modules must be installed in Drupal'
     required: false
+  php:
+    description: 'Absolute path to PHP executable to use when running composer'
+    required: false
+    default: '/usr/bin/php'
 
 runs:
   using: "composite"
@@ -22,13 +26,13 @@ runs:
     - name: "Update Drupal instance"
       shell: bash
       run: |
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} state-set system.maintenance_mode TRUE'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} updatedb -y'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} config-import -y'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} updatedb -y'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} deploy:hook -y'
-        ssh ${{ inputs.server_name }} 'if [ "${{ inputs.enable_extra_modules }}" != "" ]; then cd ${{ inputs.path }} && ${{ inputs.drush }} pm:enable ${{ inputs.enable_extra_modules }}; fi'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} state-set system.maintenance_mode FALSE'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.php }} ${{ inputs.drush }} state-set system.maintenance_mode TRUE'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.php }} ${{ inputs.drush }} updatedb -y'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.php }} ${{ inputs.drush }} cache:rebuild'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.php }} ${{ inputs.drush }} config-import -y'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.php }} ${{ inputs.drush }} updatedb -y'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.php }} ${{ inputs.drush }} cache:rebuild'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.php }} ${{ inputs.drush }} deploy:hook -y'
+        ssh ${{ inputs.server_name }} 'if [ "${{ inputs.enable_extra_modules }}" != "" ]; then cd ${{ inputs.path }} && ${{ inputs.php }} ${{ inputs.drush }} pm:enable ${{ inputs.enable_extra_modules }}; fi'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.php }} ${{ inputs.drush }} cache:rebuild'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.php }} ${{ inputs.drush }} state-set system.maintenance_mode FALSE'
