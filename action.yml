@@ -12,6 +12,10 @@ inputs:
     description: 'Path to drush executable'
     required: false
     default: './vendor/bin/drush'
+  robo:
+    description: 'Path to robo executable'
+    required: false
+    default: './vendor/bin/robo'
   enable_extra_modules:
     description: 'A space-separated list of modules to be enabled after the deployment is complete. Modules must be installed in Drupal'
     required: false
@@ -27,12 +31,7 @@ runs:
       shell: bash
       run: |
         ssh ${{ inputs.server_name }} 'if [ "${{ inputs.enable_maintenance_mode }}" == "true" ]; then cd ${{ inputs.path }} && ${{ inputs.drush }} state-set system.maintenance_mode TRUE; fi'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} updatedb -y'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} config-import -y'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} updatedb -y'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
-        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} deploy:hook -y'
+        ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.robo }} site:update --enable-maintenance-mode=0 --update-locale=0'
         ssh ${{ inputs.server_name }} 'if [ "${{ inputs.enable_extra_modules }}" != "" ]; then cd ${{ inputs.path }} && ${{ inputs.drush }} pm:enable ${{ inputs.enable_extra_modules }}; fi'
         ssh ${{ inputs.server_name }} 'cd ${{ inputs.path }} && ${{ inputs.drush }} cache:rebuild'
         ssh ${{ inputs.server_name }} 'if [ "${{ inputs.enable_maintenance_mode }}" == "true" ]; then cd ${{ inputs.path }} && ${{ inputs.drush }} state-set system.maintenance_mode FALSE; fi'

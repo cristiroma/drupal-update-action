@@ -13,6 +13,7 @@ This GitHub action runs remote commands over SSH to update a Drupal 8+ instance.
 - `path` - (Default: `empty`) - Full absolute path on the remote server where the Drupal instance is located
 - `server_name` - (Default: `server`) - Is the name of the server given in the SSH configuration (`.ssh/config`)
 - `drush` - (Default: `./vendor/bin/drush`) - Name of Drush executable to use for deployments instead of default one from vendor
+- `robo` - (Default: `./vendor/bin/robo`) - Name of robo executable to use for deployments instead of default one from vendor
 - `enable_extra_modules` - (Default: empty) - After the deployment is done, some extra modules can be enabled (i.e. `field_ui views_ui devel devel_generate` etc.)
 - `enable_maintenance_mode` - (Default: "true") - Enables the maintenance mode.
 
